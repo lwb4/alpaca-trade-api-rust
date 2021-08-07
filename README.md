@@ -41,7 +41,7 @@ let api_info = ApiInfo::from_env().unwrap();
 let client = Client::new(api_info);
 
 let request = order::OrderReqInit {
-  type_: Type::Limit,
+  r#type: Type::Limit,
   limit_price: Some(Num::from(100)),
   ..Default::default()
 }

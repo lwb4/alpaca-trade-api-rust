@@ -11,7 +11,7 @@ use crate::RequestError;
 
 pub async fn order_aapl(client: &Client) -> Result<order::Order, RequestError<order::PostError>> {
   let request = order::OrderReqInit {
-    type_: Type::Limit,
+    r#type: Type::Limit,
     limit_price: Some(Num::from(1)),
     ..Default::default()
   }

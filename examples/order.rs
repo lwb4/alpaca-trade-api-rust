@@ -22,7 +22,7 @@ async fn main() {
   // Create request for a limit order for AAPL with a limit price of USD
   // 100.
   let request = order::OrderReqInit {
-    type_: order::Type::Limit,
+    r#type: order::Type::Limit,
     limit_price: Some(Num::from(100)),
     ..Default::default()
   }
