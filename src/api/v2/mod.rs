@@ -1,8 +1,6 @@
 // Copyright (C) 2019-2021 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/// Importing everything from this module plus required dependencies.
-pub mod prelude;
 /// Definitions pertaining the user's account.
 pub mod account;
 /// Definitions pertaining account activities.

@@ -8,7 +8,8 @@ use std::time::SystemTime;
 use http::Method;
 use http_endpoint::Bytes;
 
-use num_decimal::Num;
+/// Re-importing this for user convenience
+pub use num_decimal::Num;
 
 use serde::ser::SerializeStruct;
 use serde::Deserialize;
