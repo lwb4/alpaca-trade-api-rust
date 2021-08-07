@@ -165,7 +165,7 @@ mod tests {
   async fn list_nested_order() {
     let request = order::OrderReqInit {
       class: order::Class::OneTriggersOther,
-      type_: order::Type::Limit,
+      r#type: order::Type::Limit,
       limit_price: Some(Num::from(2)),
       take_profit: Some(order::TakeProfit::Limit(Num::from(3))),
       ..Default::default()

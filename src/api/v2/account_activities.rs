@@ -207,7 +207,7 @@ pub struct NonTradeActivityImpl<T> {
   ///
   /// Note that the `Fill` variant will never be used here.
   #[serde(rename = "activity_type")]
-  pub type_: T,
+  pub r#type: T,
   /// The date on which the activity occurred or on which the
   /// transaction associated with the activity settled.
   #[serde(rename = "date", deserialize_with = "system_time_from_date_str")]
@@ -248,7 +248,7 @@ impl<T> NonTradeActivityImpl<T> {
 
     NonTradeActivityImpl::<U> {
       id,
-      type_: activity_type,
+      r#type: activity_type,
       date,
       net_amount,
       symbol,
@@ -351,7 +351,7 @@ where
       // We know that we are dealing with an enum variant and the
       // function will never return an error for those, so it's fine
       // to unwrap.
-      .map(|type_| to_variant_name(type_).unwrap())
+      .map(|r#type| to_variant_name(r#type).unwrap())
       .collect::<Vec<_>>()
       .join(",");
     serializer.serialize_str(&s)
@@ -499,7 +499,7 @@ mod tests {
       .into_non_trade()
       .unwrap();
 
-    assert_eq!(non_trade.type_, ActivityType::Dividend);
+    assert_eq!(non_trade.r#type, ActivityType::Dividend);
     assert_eq!(
       non_trade.date,
       parse_system_time_from_date_str("2019-08-01").unwrap()
@@ -525,7 +525,7 @@ mod tests {
       .unwrap()
       .into_non_trade()
       .unwrap();
-    assert_eq!(non_trade.type_, ActivityType::Dividend);
+    assert_eq!(non_trade.r#type, ActivityType::Dividend);
     assert_eq!(
       non_trade.date,
       parse_system_time_from_date_str("2020-01-01").unwrap()
@@ -561,8 +561,8 @@ mod tests {
         Activity::Trade(..) => (),
         Activity::NonTrade(non_trade) => {
           assert!(
-            non_trade.type_ == ActivityType::Transaction
-              || non_trade.type_ == ActivityType::Dividend
+            non_trade.r#type == ActivityType::Transaction
+              || non_trade.r#type == ActivityType::Dividend
           );
         },
       }

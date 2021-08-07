@@ -297,8 +297,8 @@ impl Serialize for StopLoss {
 pub struct OrderReqInit {
   /// See `OrderReq::class`.
   pub class: Class,
-  /// See `OrderReq::type_`.
-  pub type_: Type,
+  /// See `OrderReq::type`.
+  pub r#type: Type,
   /// See `OrderReq::time_in_force`.
   pub time_in_force: TimeInForce,
   /// See `OrderReq::limit_price`.
@@ -332,7 +332,7 @@ impl OrderReqInit {
       quantity,
       side,
       class: self.class,
-      type_: self.type_,
+      r#type: self.r#type,
       time_in_force: self.time_in_force,
       limit_price: self.limit_price,
       stop_price: self.stop_price,
@@ -364,7 +364,7 @@ pub struct OrderReq {
   pub class: Class,
   /// `market`, `limit`, `stop`, or `stop_limit`.
   #[serde(rename = "type")]
-  pub type_: Type,
+  pub r#type: Type,
   /// How long the order will be valid.
   #[serde(rename = "time_in_force")]
   pub time_in_force: TimeInForce,
@@ -538,7 +538,7 @@ pub struct Order {
   pub filled_quantity: u64,
   /// The type of order.
   #[serde(rename = "type")]
-  pub type_: Type,
+  pub r#type: Type,
   /// The side the order is on.
   #[serde(rename = "side")]
   pub side: Side,
@@ -820,7 +820,7 @@ mod tests {
     );
     assert_eq!(order.symbol, "AAPL");
     assert_eq!(order.quantity, 15);
-    assert_eq!(order.type_, Type::Market);
+    assert_eq!(order.r#type, Type::Market);
     assert_eq!(order.time_in_force, TimeInForce::Day);
     assert_eq!(order.limit_price, Some(Num::from(107)));
     assert_eq!(order.stop_price, Some(Num::from(106)));
@@ -832,7 +832,7 @@ mod tests {
     async fn test(extended_hours: bool) -> Result<(), RequestError<PostError>> {
       let symbol = Symbol::SymExchgCls("SPY".to_string(), Exchange::Arca, asset::Class::UsEquity);
       let request = OrderReqInit {
-        type_: Type::Limit,
+        r#type: Type::Limit,
         limit_price: Some(Num::from(1)),
         extended_hours,
         ..Default::default()
@@ -848,7 +848,7 @@ mod tests {
       assert_eq!(order.symbol, "SPY");
       assert_eq!(order.quantity, 1);
       assert_eq!(order.side, Side::Buy);
-      assert_eq!(order.type_, Type::Limit);
+      assert_eq!(order.r#type, Type::Limit);
       assert_eq!(order.time_in_force, TimeInForce::Day);
       assert_eq!(order.limit_price, Some(Num::from(1)));
       assert_eq!(order.stop_price, None);
@@ -877,7 +877,7 @@ mod tests {
   async fn submit_trailing_stop_price_order() {
     let symbol = Symbol::Sym("SPY".to_string());
     let request = OrderReqInit {
-      type_: Type::TrailingStop,
+      r#type: Type::TrailingStop,
       trail_price: Some(Num::from(50)),
       ..Default::default()
     }
@@ -892,7 +892,7 @@ mod tests {
     assert_eq!(order.symbol, "SPY");
     assert_eq!(order.quantity, 1);
     assert_eq!(order.side, Side::Buy);
-    assert_eq!(order.type_, Type::TrailingStop);
+    assert_eq!(order.r#type, Type::TrailingStop);
     assert_eq!(order.time_in_force, TimeInForce::Day);
     assert_eq!(order.limit_price, None);
     // We don't check the stop price here. It may be set to a value that
@@ -906,7 +906,7 @@ mod tests {
   async fn submit_trailing_stop_percent_order() {
     let symbol = Symbol::Sym("SPY".to_string());
     let request = OrderReqInit {
-      type_: Type::TrailingStop,
+      r#type: Type::TrailingStop,
       trail_percent: Some(Num::from(10)),
       ..Default::default()
     }
@@ -921,7 +921,7 @@ mod tests {
     assert_eq!(order.symbol, "SPY");
     assert_eq!(order.quantity, 1);
     assert_eq!(order.side, Side::Buy);
-    assert_eq!(order.type_, Type::TrailingStop);
+    assert_eq!(order.r#type, Type::TrailingStop);
     assert_eq!(order.time_in_force, TimeInForce::Day);
     assert_eq!(order.limit_price, None);
     // We don't check the stop price here. It may be set to a value that
@@ -934,7 +934,7 @@ mod tests {
   async fn submit_bracket_order() {
     let request = OrderReqInit {
       class: Class::Bracket,
-      type_: Type::Limit,
+      r#type: Type::Limit,
       limit_price: Some(Num::from(2)),
       take_profit: Some(TakeProfit::Limit(Num::from(3))),
       stop_loss: Some(StopLoss::Stop(Num::from(1))),
@@ -955,7 +955,7 @@ mod tests {
     assert_eq!(order.symbol, "SPY");
     assert_eq!(order.quantity, 1);
     assert_eq!(order.side, Side::Buy);
-    assert_eq!(order.type_, Type::Limit);
+    assert_eq!(order.r#type, Type::Limit);
     assert_eq!(order.time_in_force, TimeInForce::Day);
     assert_eq!(order.limit_price, Some(Num::from(2)));
     assert_eq!(order.stop_price, None);
@@ -969,7 +969,7 @@ mod tests {
   async fn submit_one_triggers_other_order() {
     let request = OrderReqInit {
       class: Class::OneTriggersOther,
-      type_: Type::Limit,
+      r#type: Type::Limit,
       limit_price: Some(Num::from(2)),
       stop_loss: Some(StopLoss::Stop(Num::from(1))),
       ..Default::default()
@@ -989,7 +989,7 @@ mod tests {
     assert_eq!(order.symbol, "SPY");
     assert_eq!(order.quantity, 1);
     assert_eq!(order.side, Side::Buy);
-    assert_eq!(order.type_, Type::Limit);
+    assert_eq!(order.r#type, Type::Limit);
     assert_eq!(order.time_in_force, TimeInForce::Day);
     assert_eq!(order.limit_price, Some(Num::from(2)));
     assert_eq!(order.stop_price, None);
@@ -1005,7 +1005,7 @@ mod tests {
       let client = Client::new(api_info);
 
       let request = OrderReqInit {
-        type_: Type::Limit,
+        r#type: Type::Limit,
         class: Class::Simple,
         time_in_force,
         limit_price: Some(Num::from(1)),
@@ -1036,7 +1036,7 @@ mod tests {
     let client = Client::new(api_info);
 
     let request = OrderReqInit {
-      type_: Type::Limit,
+      r#type: Type::Limit,
       limit_price: Some(Num::from(1000)),
       ..Default::default()
     }
@@ -1081,7 +1081,7 @@ mod tests {
     assert_eq!(posted.asset_id, gotten.asset_id);
     assert_eq!(posted.symbol, gotten.symbol);
     assert_eq!(posted.quantity, gotten.quantity);
-    assert_eq!(posted.type_, gotten.type_);
+    assert_eq!(posted.r#type, gotten.r#type);
     assert_eq!(posted.side, gotten.side);
     assert_eq!(posted.time_in_force, gotten.time_in_force);
   }
@@ -1125,7 +1125,7 @@ mod tests {
   #[test(tokio::test)]
   async fn change_order() {
     let request = OrderReqInit {
-      type_: Type::Limit,
+      r#type: Type::Limit,
       limit_price: Some(Num::from(1)),
       ..Default::default()
     }
@@ -1173,7 +1173,7 @@ mod tests {
   #[test(tokio::test)]
   async fn change_trail_stop_order() {
     let request = OrderReqInit {
-      type_: Type::TrailingStop,
+      r#type: Type::TrailingStop,
       trail_price: Some(Num::from(20)),
       ..Default::default()
     }
@@ -1216,7 +1216,7 @@ mod tests {
     let client_order_id = Uuid::new_v4().to_simple().to_string();
 
     let request = OrderReqInit {
-      type_: Type::Limit,
+      r#type: Type::Limit,
       limit_price: Some(Num::from(1)),
       client_order_id: Some(client_order_id.clone()),
       ..Default::default()

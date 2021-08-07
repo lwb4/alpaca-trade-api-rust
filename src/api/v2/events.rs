@@ -218,7 +218,7 @@ mod tests {
     assert_eq!(order.asset_id, trade.order.asset_id);
     assert_eq!(order.symbol, trade.order.symbol);
     assert_eq!(order.asset_class, trade.order.asset_class);
-    assert_eq!(order.type_, trade.order.type_);
+    assert_eq!(order.r#type, trade.order.r#type);
     assert_eq!(order.side, trade.order.side);
     assert_eq!(order.time_in_force, trade.order.time_in_force);
   }
